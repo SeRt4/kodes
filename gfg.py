@@ -1,0 +1,118 @@
+import pygame
+
+pygame.init()
+width = 1600
+height = 900
+screen = pygame.display.set_mode((width, height))
+x, y = 0, 0
+running = True
+
+
+class Cell:
+    def __init__(self, x, y, width, height):
+        self.x, self.y = x, y
+        self.width, self.height = width, height
+        self.alive = False
+        self.colors = [(0, 0, 0), (255, 255, 255)]
+
+    def show(self):
+        if self.alive:
+            pygame.draw.rect(screen, self.colors[self.alive], (self.x, self.y, self.width, self.height))
+
+    def dying(self):
+        self.alive = not self.alive
+
+
+class Background:
+    def __init__(self, width, height):
+        self.cells = []
+        self.width = width
+        self.height = height
+        self.square_size = 20
+        for i in range(self.height // self.square_size):
+            self.cells.append([])
+            for j in range(self.width // self.square_size):
+                self.cells[-1].append(Cell(j * 20, i * 20, self.square_size, self.square_size))
+
+    def draw_cells(self):
+        for i in range(self.height // self.square_size):
+            for j in range(self.width // self.square_size):
+                self.cells[i][j].show()
+
+    def neighbors_alive(self, x, y):
+        check = 0
+        if self.cells != self.cells[0][0] or self.cells[900 / 20][0] or self.cells[0][1600 / 20] or \
+                self.cells[900 / 20][1600 / 20]:
+            if self.cells[y - 1][x - 1].alive:
+                check += 1
+            if self.cells[y - 1][x + 1].alive:
+                check += 1
+            if self.cells[y + 1][x + 1].alive:
+                check += 1
+            if self.cells[y + 1][x - 1].alive:
+                check += 1
+            if self.cells[y][x - 1].alive:
+                check += 1
+            if self.cells[y][x + 1].alive:
+                check += 1
+            if self.cells[y + 1][x].alive:
+                check += 1
+            if self.cells[y - 1][x].alive:
+                check += 1
+
+        if self.cells == self.cells[0][0]:
+            if self.cells[y][x + 1].alive:
+                check += 1
+            if self.cells[y + 1][x].alive:
+                check += 1
+            if self.cells[y + 1][x + 1].alive:
+                check += 1
+
+        if self.cells == self.cells[900 / 20][0]:
+            if self.cells[y][x + 1].alive:
+                check += 1
+            if self.cells[y - 1][x].alive:
+                check += 1
+            if self.cells[y - 1][x + 1].alive:
+                check += 1
+
+        if self.cells == self.cells[0][1600 / 20]:
+            if self.cells[y][x - 1].alive:
+                check += 1
+            if self.cells[y + 1][x].alive:
+                check += 1
+            if self.cells[y + 1][x - 1].alive:
+                check += 1
+
+        if self.cells == self.cells[900 / 20][1600 / 20]:
+            if self.cells[y][x - 1].alive:
+                check += 1
+            if self.cells[y - 1][x].alive:
+                check += 1
+            if self.cells[y - 1][x - 1].alive:
+                check += 1
+
+        return check
+
+b = Background(width, height)
+b.cells[0][0].dying()
+b.cells[1][0].dying()
+b.cells[0][1].dying()
+b.cells[2][2].dying()
+b.cells[1][1].dying()
+b.cells[10][6].dying()
+b.cells[5][7].dying()
+b.cells[3][6].dying()
+b.cells[8][0].dying()
+b.cells[2][9].dying()
+b.cells[2][5].dying()
+b.cells[10][0].dying()
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                running = False
+    b.draw_cells()
+    pygame.display.flip()
