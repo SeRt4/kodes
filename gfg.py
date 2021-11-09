@@ -41,57 +41,17 @@ class Background:
 
     def neighbors_alive(self, x, y):
         check = 0
-        if self.cells != self.cells[0][0] or self.cells[900 / 20][0] or self.cells[0][1600 / 20] or \
-                self.cells[900 / 20][1600 / 20]:
-            if self.cells[y - 1][x - 1].alive:
-                check += 1
-            if self.cells[y - 1][x + 1].alive:
-                check += 1
-            if self.cells[y + 1][x + 1].alive:
-                check += 1
-            if self.cells[y + 1][x - 1].alive:
-                check += 1
-            if self.cells[y][x - 1].alive:
-                check += 1
-            if self.cells[y][x + 1].alive:
-                check += 1
-            if self.cells[y + 1][x].alive:
-                check += 1
-            if self.cells[y - 1][x].alive:
-                check += 1
-
-        if self.cells == self.cells[0][0]:
-            if self.cells[y][x + 1].alive:
-                check += 1
-            if self.cells[y + 1][x].alive:
-                check += 1
-            if self.cells[y + 1][x + 1].alive:
-                check += 1
-
-        if self.cells == self.cells[900 / 20][0]:
-            if self.cells[y][x + 1].alive:
-                check += 1
-            if self.cells[y - 1][x].alive:
-                check += 1
-            if self.cells[y - 1][x + 1].alive:
-                check += 1
-
-        if self.cells == self.cells[0][1600 / 20]:
-            if self.cells[y][x - 1].alive:
-                check += 1
-            if self.cells[y + 1][x].alive:
-                check += 1
-            if self.cells[y + 1][x - 1].alive:
-                check += 1
-
-        if self.cells == self.cells[900 / 20][1600 / 20]:
-            if self.cells[y][x - 1].alive:
-                check += 1
-            if self.cells[y - 1][x].alive:
-                check += 1
-            if self.cells[y - 1][x - 1].alive:
-                check += 1
-
+        for i in range(y - 1, y + 2):
+            for j in range(x - 1, x + 2):
+                if self.cells[i][j].alive:
+                    check += 1
+                if self.cells == self.cells[0][0]:
+                    if self.cells[y][x + 1].alive:
+                        check += 1
+                    if self.cells[y + 1][x].alive:
+                        check += 1
+                    if self.cells[y + 1][x + 1].alive:
+                        check += 1
         return check
 
 b = Background(width, height)
